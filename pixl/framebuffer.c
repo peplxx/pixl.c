@@ -9,7 +9,7 @@ typedef struct FrameBuffer{
     pixel *buffer;
     
     // Methods
-    void (* render_pixel)(FrameBuffer* self, pixel pixel);
+    void (* render_pixel)(struct FrameBuffer* self, vec2 pos, pixel pixel);
     void (* clear)(struct FrameBuffer* self, pixel color);
     void (* destroy)(struct FrameBuffer* self);
 
@@ -25,6 +25,10 @@ void destroy_framebuffer(struct FrameBuffer* self){
     free(self->buffer);
 }
 
+void render_pixel(struct FrameBuffer* self, vec2 pos, pixel pixel){
+    self->buffer[pos.frame_buffer_index(&pos, self->width)] = pixel;
+}
+
 FrameBuffer FrameBuffer_create(uint32_t width, uint32_t height,pixel color){
     FrameBuffer fb = (FrameBuffer){
         .width = width,
@@ -38,7 +42,4 @@ FrameBuffer FrameBuffer_create(uint32_t width, uint32_t height,pixel color){
     return fb;
 }
 
-void render_pixel(struct FrameBuffer* self, vec2 pos, pixel pixel){
-    self->buffer[pos.frame_buffer_index(&pos, self->width)] = pixel;
-}
 #endif
