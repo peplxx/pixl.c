@@ -13,7 +13,7 @@ void render(struct Shape* shape){
     vec2 ld = self->vertices[0],ru = self->vertices[2];
     for (int x=ld.x; x< ru.x; x++){
         for (int y=ld.y; y<ru.y; y++){
-            
+            // TODO: Add framebuffer.render_pixel
         }
     }
 }
