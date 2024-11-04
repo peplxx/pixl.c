@@ -55,3 +55,4 @@ dkms.conf
 SDL/
 changelog.md
 main
+.vscode/
