@@ -1,8 +1,8 @@
-#include <SDL2/SDL.h>
 #include <stdio.h>
 #include "pixl/pixl.h"
 
 int main() {
-    Pixl pixl = create_pixl(640,480,"Pixl");
+    Pixl pixl = Pixl_create(1280,1280,"Pixl");
+    pixl.display(&pixl);
     return 0;
 }
