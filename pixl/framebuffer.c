@@ -1,11 +1,13 @@
 #ifndef FRAMEBUFF_PIXL
 #define FRAMEBUFF_PIXL
 #include <stdint.h>
+#include <stdio.h>
 #include "primitives/primitives.h"
 
 
 typedef struct FrameBuffer{
-    const uint32_t width, height;
+    int32_t width;
+    int32_t height;
     pixel *buffer;
     
     // Methods
@@ -25,20 +27,21 @@ void destroy_framebuffer(struct FrameBuffer* self){
     free(self->buffer);
 }
 
-void render_pixel(struct FrameBuffer* self, vec2 pos, pixel pixel){
-    self->buffer[pos.frame_buffer_index(&pos, self->width)] = pixel;
+void render_pixel(struct FrameBuffer* self, struct vec2 pos, pixel pixel){
+    if (pos.x >= self->width || pos.x < 0 || pos.y >= self->height || pos.y < 0)return;
+    self->buffer[pos.x * self->width + pos.y] = pixel;
 }
 
-FrameBuffer FrameBuffer_create(uint32_t width, uint32_t height,pixel color){
-    FrameBuffer fb = (FrameBuffer){
-        .width = width,
-        .height = height,
-        .buffer = (pixel*) malloc(width * height * sizeof(pixel)),
-        .render_pixel=render_pixel,
-        .clear = clear_framebuffer,
-        .destroy = destroy_framebuffer,
-    };
-    fb.clear(&fb, color);
+FrameBuffer* FrameBuffer_create(int32_t width, int32_t height,pixel color){
+    FrameBuffer* fb = (FrameBuffer*)malloc(sizeof(FrameBuffer));
+    fb->width = width;
+    fb->height = height;
+    fb->buffer = (pixel*) malloc(width * height * sizeof(pixel));
+    fb->render_pixel=render_pixel;
+    fb->clear = clear_framebuffer;
+    fb->destroy = destroy_framebuffer;
+
+    fb->clear(fb, color);
     return fb;
 }
 

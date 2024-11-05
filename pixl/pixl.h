@@ -11,7 +11,7 @@ const struct Pixl* get_canvas(){
 
 
 typedef struct Pixl{
-    const uint32_t Width, Height;
+    const int32_t Width, Height;
     const char* Title;
     SDL_Window *window;
     SDL_Renderer *renderer;
@@ -39,6 +39,7 @@ void display(struct Pixl*self){
     while (self->is_running ){
         while ( SDL_PollEvent(&event)){
             if (event.type == SDL_QUIT) self->is_running = 0;
+            // printf("%x\n",event.type); EVENT OUTPUT
         }
         
     }
@@ -55,25 +56,27 @@ void destroy(struct Pixl*self){
 
 
 static Pixl Pixl_create(
-    uint32_t width,
-    uint32_t height,
+    int32_t width,
+    int32_t height,
     const char* title,
     pixel color
 ){
     if (canvas)return *canvas;
-    FrameBuffer fb = FrameBuffer_create(width, height, color);
+    FrameBuffer *fb = FrameBuffer_create(width, height, color);
+
     Pixl pixl = (Pixl){
         .Width=width,
         .Height=height,
         .Title=title,
         .window=NULL,
         .renderer=NULL,
-        .frameBuffer=&fb,
+        .frameBuffer=fb,
         .is_running=0,
         .init=init,
         .display=display,
         .destroy=destroy,
     };
+    
     pixl.init(&pixl);
     canvas = &pixl;
     return pixl;
