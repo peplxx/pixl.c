@@ -7,3 +7,6 @@ run:
 build-run:
 	make build
 	make run
+
+install-sdl:
+	sudo apt install libsdl2-dev
