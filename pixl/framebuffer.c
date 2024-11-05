@@ -4,12 +4,11 @@
 #include <stdio.h>
 #include "primitives/primitives.h"
 
-
 typedef struct FrameBuffer{
     int32_t width;
     int32_t height;
     pixel *buffer;
-    
+
     // Methods
     void (* render_pixel)(struct FrameBuffer* self, vec2 pos, pixel pixel);
     void (* clear)(struct FrameBuffer* self, pixel color);
@@ -40,8 +39,7 @@ FrameBuffer* FrameBuffer_create(int32_t width, int32_t height,pixel color){
     fb->render_pixel=render_pixel;
     fb->clear = clear_framebuffer;
     fb->destroy = destroy_framebuffer;
-
-    fb->clear(fb, color);
+    clear_framebuffer(fb, color);
     return fb;
 }
 

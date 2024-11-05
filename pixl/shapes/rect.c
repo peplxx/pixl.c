@@ -3,22 +3,21 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "shape.h"
-
+#include "../utils/math.c"
 
 typedef struct Rectangle{
     vec2 ld;
     vec2 ru;
     pixel color;
     Shape base;
-    // void (* render)(struct Rectangle* self,struct FrameBuffer* fb);
 } Rectangle;
 
 void render_rectangle(struct Shape* self, struct FrameBuffer* fb){
     Rectangle* rect = (Rectangle*) self;
     struct vec2 ld = rect->ld,ru = rect->ru;
 
-    for (int32_t x=ld.x; x< ru.x; x+=1){
-        for (int32_t y=ld.y; y<ru.y; y+=1){
+    for (int32_t x=ld.x; x< min(ru.x,fb->width); x+=1){
+        for (int32_t y=ld.y; min(y<ru.y,fb->height); y+=1){
             struct vec2 point = VEC2(x,y);
             fb->render_pixel(fb,point,rect->color);
         }

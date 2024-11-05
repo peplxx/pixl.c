@@ -58,6 +58,7 @@ void display(struct Pixl*self){
         
         }
         self->update(self);
+
     }
     self->destroy(self);
     

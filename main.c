@@ -27,9 +27,8 @@ void onUpdate(struct Pixl* self, SDL_Event* event){
         (1 - t2) * blend1.color.b + t2 * Color3.color.b
     );
     if (isPressed){
-        Rectangle rect = Rectangle_create(
-        VEC2(mouse.x-BRUSH,mouse.y-BRUSH),
-        VEC2(mouse.x+BRUSH,mouse.y+BRUSH),
+        Circle rect = Circle_create(
+        mouse, BRUSH,
         finalColor);
     rect.base.render(&rect, self->frameBuffer);
     }
