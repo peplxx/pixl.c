@@ -31,7 +31,7 @@ void onUpdate(struct Pixl* self, SDL_Event* event){
         VEC2(mouse.x-BRUSH,mouse.y-BRUSH),
         VEC2(mouse.x+BRUSH,mouse.y+BRUSH),
         finalColor);
-    rect.render(&rect, self->frameBuffer);
+    rect.base.render(&rect, self->frameBuffer);
     }
 }
 
