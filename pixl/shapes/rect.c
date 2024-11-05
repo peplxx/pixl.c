@@ -32,4 +32,9 @@ struct Rectangle Rectangle_create(vec2 LeftDown, vec2 RightUp, pixel color){
     };
     return rect;
 }
+struct Rectangle Square_create(vec2 LeftDown, int32_t ){
+    /* data */
+};
+
+
 #endif

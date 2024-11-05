@@ -2,11 +2,59 @@
 #include "pixl/shapes/shapes.h"
 #define PIXL_DEBUG
 
+int BRUSH = 20;
+int isPressed = 0;
 
+void onUpdate(struct Pixl* self, SDL_Event* event){
+    FrameBuffer* fb = self->frameBuffer;
+    vec2 mouse = VEC2(event->motion.y, event->motion.x);
+    pixel Color1 = RGB(255, 0, 0);
+    pixel Color2 = RGB(0, 255, 0); 
+    pixel Color3 = RGB(0, 0, 255);
+    
+    float t1 = (float)mouse.x / self->Width;   // Horizontal factor
+    float t2 = (float)mouse.y / self->Height;  // Vertical factor
+
+    pixel blend1 = RGB(
+        (1 - t1) * Color1.color.r + t1 * Color2.color.r,
+        (1 - t1) * Color1.color.g + t1 * Color2.color.g,
+        (1 - t1) * Color1.color.b + t1 * Color2.color.b
+    );
+
+    pixel finalColor = RGB(
+        (1 - t2) * blend1.color.r + t2 * Color3.color.r,
+        (1 - t2) * blend1.color.g + t2 * Color3.color.g,
+        (1 - t2) * blend1.color.b + t2 * Color3.color.b
+    );
+    if (isPressed){
+        Rectangle rect = Rectangle_create(
+        VEC2(mouse.x-BRUSH,mouse.y-BRUSH),
+        VEC2(mouse.x+BRUSH,mouse.y+BRUSH),
+        finalColor);
+    rect.render(&rect, self->frameBuffer);
+    }
+}
+
+void onMouseDown(struct Pixl* self, SDL_Event* event){
+    // printf("Mouse Down! (%d, %d)\n",event->motion.x, event->motion.y);
+    isPressed = 1;
+}
+void onMouseUp(struct Pixl* self, SDL_Event* event){
+    // printf("Mouse Up! (%d, %d)\n",event->motion.x, event->motion.y);
+    isPressed = 0;
+}
+
+void onMouseWheel(struct Pixl* self, SDL_Event* event){
+    printf("Brush size is %d\n", BRUSH);
+    BRUSH += event->wheel.y;
+}
 int main() {
-    Pixl pixl = Pixl_create(1280,1280,"Pixl",RGB(0,255,0));
-    Rectangle rect = Rectangle_create(VEC2(140,140),VEC2(1140,1140),RGB(0,0,0));
-    rect.render(&rect, pixl.frameBuffer);
+    Pixl pixl = Pixl_create(1000,1000,"Pixl",RGB(20,20,20));
+    pixl.onUpdate = onUpdate;
+    pixl.onMouseDown = onMouseDown;
+    pixl.onMouseUp = onMouseUp;
+    pixl.onMouseWheel = onMouseWheel;
+
     pixl.display(&pixl);
     return 0;
 }

@@ -3,6 +3,7 @@
 #define MAIN_PIXL
 #include <SDL2/SDL.h>
 #include "framebuffer.c"
+#include "utils/constraints.h"
 
 struct Pixl* canvas = NULL;
 const struct Pixl* get_canvas(){
@@ -12,6 +13,7 @@ const struct Pixl* get_canvas(){
 
 typedef struct Pixl{
     const int32_t Width, Height;
+    int32_t ticks;
     const char* Title;
     SDL_Window *window;
     SDL_Renderer *renderer;
@@ -22,7 +24,15 @@ typedef struct Pixl{
     // Methods
     void (* init)(struct Pixl *self);
     void (* display)(struct Pixl *self);
+    void (* update)(struct Pixl* self);
     void (* destroy)(struct Pixl *self);
+    
+    // User overridable funcs
+    void (* onUpdate)(struct Pilx* self, SDL_Event *event);
+    void (* onMouseDown)(struct Pilx* self, SDL_Event *event);
+    void (* onMouseUp)(struct Pilx* self, SDL_Event *event);
+    void (* onMouseWheel)(struct Pilx* self, SDL_Event *event);
+
 } Pixl;
 
 void init(struct Pixl*self){
@@ -33,15 +43,21 @@ void init(struct Pixl*self){
 void display(struct Pixl*self){
     self->is_running = 1;
     SDL_Event event;
-    SDL_UpdateTexture(self->texture, NULL, self->frameBuffer->buffer, self->Width * sizeof(pixel));
-    SDL_RenderCopy(self->renderer, self->texture, NULL, NULL);
-    SDL_RenderPresent(self->renderer);
     while (self->is_running ){
-        while ( SDL_PollEvent(&event)){
+        while (SDL_PollEvent(&event)){
             if (event.type == SDL_QUIT) self->is_running = 0;
-            // printf("%x\n",event.type); EVENT OUTPUT
-        }
+            if (self->onMouseDown != NULL && event.type == SDL_MOUSEBUTTONDOWN)self->onMouseDown(self,&event);
+            if (self->onMouseUp != NULL && event.type == SDL_MOUSEBUTTONUP)self->onMouseUp(self,&event); 
+            if (self->onMouseWheel != NULL && event.type == SDL_MOUSEWHEEL)self->onMouseWheel(self,&event);
+            
+            
+            
+            
+            if (self->onUpdate != NULL) 
+                self->onUpdate(self, &event); // User defined func for changing buffer.
         
+        }
+        self->update(self);
     }
     self->destroy(self);
     
@@ -54,7 +70,12 @@ void destroy(struct Pixl*self){
     SDL_Quit();
 }
 
-
+void update(struct Pixl* self){
+    self->ticks+=1;
+    SDL_UpdateTexture(self->texture, NULL, self->frameBuffer->buffer, self->Width * sizeof(pixel));
+    SDL_RenderCopy(self->renderer, self->texture, NULL, NULL);
+    SDL_RenderPresent(self->renderer);
+}
 static Pixl Pixl_create(
     int32_t width,
     int32_t height,
@@ -67,6 +88,7 @@ static Pixl Pixl_create(
     Pixl pixl = (Pixl){
         .Width=width,
         .Height=height,
+        .ticks=0,
         .Title=title,
         .window=NULL,
         .renderer=NULL,
@@ -74,12 +96,17 @@ static Pixl Pixl_create(
         .is_running=0,
         .init=init,
         .display=display,
+        .update=update,
         .destroy=destroy,
+
+        .onUpdate=NULL,
+        .onMouseDown=NULL,
+        .onMouseUp=NULL,
+        .onMouseWheel=NULL,
     };
     
     pixl.init(&pixl);
     canvas = &pixl;
     return pixl;
-    
 }
 #endif
