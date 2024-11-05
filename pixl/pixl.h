@@ -2,7 +2,7 @@
 #ifndef MAIN_PIXL
 #define MAIN_PIXL
 #include <SDL2/SDL.h>
-#include "framebuffer.c"
+#include "render/framebuffer.h"
 #include "utils/constraints.h"
 
 struct Pixl* canvas = NULL;
@@ -73,7 +73,7 @@ void destroy(struct Pixl*self){
 
 void update(struct Pixl* self){
     self->ticks+=1;
-    SDL_UpdateTexture(self->texture, NULL, self->frameBuffer->buffer, self->Width * sizeof(pixel));
+    SDL_UpdateTexture(self->texture, NULL, self->frameBuffer->get_buffer(self->frameBuffer), self->Width * sizeof(pixel));
     SDL_RenderCopy(self->renderer, self->texture, NULL, NULL);
     SDL_RenderPresent(self->renderer);
 }
@@ -105,6 +105,7 @@ static Pixl Pixl_create(
         .onMouseUp=NULL,
         .onMouseWheel=NULL,
     };
+    pixl.frameBuffer = fb;
     
     pixl.init(&pixl);
     canvas = &pixl;

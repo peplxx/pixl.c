@@ -12,14 +12,14 @@ typedef struct Rectangle{
     Shape base;
 } Rectangle;
 
-void render_rectangle(struct Shape* self, struct FrameBuffer* fb){
+void render_rectangle(struct Shape* self, struct FrameBuffer* fb, int32_t z_index){
     Rectangle* rect = (Rectangle*) self;
     struct vec2 ld = rect->ld,ru = rect->ru;
 
     for (int32_t x=ld.x; x< min(ru.x,fb->width); x+=1){
         for (int32_t y=ld.y; min(y<ru.y,fb->height); y+=1){
             struct vec2 point = VEC2(x,y);
-            fb->render_pixel(fb,point,rect->color);
+            fb->render_pixel(fb,z_index,point,rect->color);
         }
     }
 }

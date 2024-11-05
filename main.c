@@ -27,11 +27,13 @@ void onUpdate(struct Pixl* self, SDL_Event* event){
         (1 - t2) * blend1.color.b + t2 * Color3.color.b
     );
     if (isPressed){
-        Circle rect = Circle_create(
-        mouse, BRUSH,
-        finalColor);
-    rect.base.render(&rect, self->frameBuffer);
+        Circle rect = Circle_create(mouse, BRUSH, finalColor);
+        rect.base.render(&rect, self->frameBuffer, 0);
     }
+    fb->layers[MAX_LAYERS-1]->clear(fb->layers[MAX_LAYERS-1]);
+    Circle ui = Circle_create(mouse, BRUSH, RGB(255, 255, 255));
+    ui.base.render(&ui, self->frameBuffer, MAX_LAYERS-1);
+
 }
 
 void onMouseDown(struct Pixl* self, SDL_Event* event){
