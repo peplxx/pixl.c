@@ -1,6 +1,8 @@
 #include "pixl/pixl.h"
 #include "pixl/shapes/shapes.h"
-#define PIXL_DEBUG
+
+// #define DEBUG
+#include "pixl/utils/debug.h"
 
 int BRUSH = 20;
 int isPressed = 0;
@@ -30,7 +32,6 @@ void onUpdate(struct Pixl* self, SDL_Event* event){
         Circle rect = Circle_create(mouse, BRUSH, finalColor);
         rect.base.render(&rect, self->frameBuffer, 0);
     }
-    // if (event.type)return; // skip clearing when scrolling
     fb->layers[MAX_LAYERS-1]->clear(fb->layers[MAX_LAYERS-1]);
     Circle ui = Circle_create(mouse, BRUSH, RGB(255, 255, 255));
     ui.base.render(&ui, self->frameBuffer, MAX_LAYERS-1);
@@ -38,16 +39,16 @@ void onUpdate(struct Pixl* self, SDL_Event* event){
 }
 
 void onMouseDown(struct Pixl* self, SDL_Event* event){
-    // printf("Mouse Down! (%d, %d)\n",event->motion.x, event->motion.y);
+    dprintf("Mouse Down! (%d, %d)\n",event->motion.x, event->motion.y);
     isPressed = 1;
 }
 void onMouseUp(struct Pixl* self, SDL_Event* event){
-    // printf("Mouse Up! (%d, %d)\n",event->motion.x, event->motion.y);
+    dprintf("Mouse Up! (%d, %d)\n",event->motion.x, event->motion.y);
     isPressed = 0;
 }
 
 void onMouseWheel(struct Pixl* self, SDL_Event* event){
-    // printf("Brush size is %d\n", BRUSH);
+    dprintf("Brush size is %d\n", BRUSH);
     BRUSH += event->wheel.y;
 }
 int main() {
