@@ -14,6 +14,7 @@ const struct Pixl* get_canvas(){
 typedef struct Pixl{
     const int32_t Width, Height;
     int32_t ticks;
+    vec2 mouse;
     const char* Title;
     SDL_Window *window;
     SDL_Renderer *renderer;
@@ -46,6 +47,7 @@ void display(struct Pixl*self){
     while (self->is_running ){
         while (SDL_PollEvent(&event)){
             if (event.type == SDL_QUIT) self->is_running = 0;
+            if (event.type == SDL_MOUSEMOTION) self->mouse = VEC2(event.motion.y, event.motion.x);
             if (self->onMouseDown != NULL && event.type == SDL_MOUSEBUTTONDOWN)self->onMouseDown(self,&event);
             if (self->onMouseUp != NULL && event.type == SDL_MOUSEBUTTONUP)self->onMouseUp(self,&event); 
             if (self->onMouseWheel != NULL && event.type == SDL_MOUSEWHEEL)self->onMouseWheel(self,&event);

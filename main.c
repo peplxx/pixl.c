@@ -7,7 +7,7 @@ int isPressed = 0;
 
 void onUpdate(struct Pixl* self, SDL_Event* event){
     FrameBuffer* fb = self->frameBuffer;
-    vec2 mouse = VEC2(event->motion.y, event->motion.x);
+    vec2 mouse = self->mouse;
     pixel Color1 = RGB(255, 0, 0);
     pixel Color2 = RGB(0, 255, 0); 
     pixel Color3 = RGB(0, 0, 255);
@@ -30,6 +30,7 @@ void onUpdate(struct Pixl* self, SDL_Event* event){
         Circle rect = Circle_create(mouse, BRUSH, finalColor);
         rect.base.render(&rect, self->frameBuffer, 0);
     }
+    // if (event.type)return; // skip clearing when scrolling
     fb->layers[MAX_LAYERS-1]->clear(fb->layers[MAX_LAYERS-1]);
     Circle ui = Circle_create(mouse, BRUSH, RGB(255, 255, 255));
     ui.base.render(&ui, self->frameBuffer, MAX_LAYERS-1);
@@ -46,7 +47,7 @@ void onMouseUp(struct Pixl* self, SDL_Event* event){
 }
 
 void onMouseWheel(struct Pixl* self, SDL_Event* event){
-    printf("Brush size is %d\n", BRUSH);
+    // printf("Brush size is %d\n", BRUSH);
     BRUSH += event->wheel.y;
 }
 int main() {
