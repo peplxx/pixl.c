@@ -1,10 +1,11 @@
 #include "pixl/pixl.h"
 #include "pixl/shapes/shapes.h"
 
-// #define DEBUG
+#define DEBUG
 #include "pixl/utils/debug.h"
 
 int BRUSH = 20;
+vec2 start = VEC2(-1, -1);
 int isPressed = 0;
 
 void onUpdate(struct Pixl* self, SDL_Event* event){
@@ -28,28 +29,31 @@ void onUpdate(struct Pixl* self, SDL_Event* event){
         (1 - t2) * blend1.color.g + t2 * Color3.color.g,
         (1 - t2) * blend1.color.b + t2 * Color3.color.b
     );
-    if (isPressed){
-        Circle rect = Circle_create(mouse, BRUSH, finalColor);
-        rect.base.render(&rect, self->frameBuffer, 0);
-    }
     fb->layers[MAX_LAYERS-1]->clear(fb->layers[MAX_LAYERS-1]);
-    Circle ui = Circle_create(mouse, BRUSH, RGB(255, 255, 255));
-    ui.base.render(&ui, self->frameBuffer, MAX_LAYERS-1);
-
+    if (isPressed){
+        Line line = Line_create(start, mouse, BRUSH, finalColor);
+        line.base.render(&line, self->frameBuffer, MAX_LAYERS-1);
+    }
+    else{
+        Circle ui = Circle_create(mouse, BRUSH, finalColor);
+        ui.base.render(&ui, self->frameBuffer, MAX_LAYERS-1);
+    }
 }
 
 void onMouseDown(struct Pixl* self, SDL_Event* event){
-    dprintf("Mouse Down! (%d, %d)\n",event->motion.x, event->motion.y);
+    dprintf("Mouse Down! (%d, %d) brush size: %d\n",event->motion.x, event->motion.y, BRUSH);
     isPressed = 1;
+    start = self->mouse;
 }
 void onMouseUp(struct Pixl* self, SDL_Event* event){
     dprintf("Mouse Up! (%d, %d)\n",event->motion.x, event->motion.y);
     isPressed = 0;
+    Line line = Line_create(start, self->mouse, BRUSH, WHITE);
+    line.base.render(&line, self->frameBuffer, MAX_LAYERS-2);
 }
 
 void onMouseWheel(struct Pixl* self, SDL_Event* event){
-    dprintf("Brush size is %d\n", BRUSH);
-    BRUSH += event->wheel.y;
+    dprintf("Brush size is now %d\n", BRUSH += event->wheel.y);
 }
 int main() {
     Pixl pixl = Pixl_create(1000,1000,"Pixl",RGB(20,20,20));

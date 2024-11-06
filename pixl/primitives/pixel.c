@@ -2,12 +2,12 @@
 
 #ifndef PIXEL_PIXL
 #define PIXEL_PIXL
-#define BLACK RGB(0,0,0);
-#define RED RGB(255,0,0);
-#define GREEN RGB(0,255,0);
-#define BLUE RGB(0,0,255);
-#define WHITE RGB(255,255,255);
-#define TRANSPARENCY ARGB(0,0,0,0);
+#define BLACK RGB(0,0,0)
+#define RED RGB(255,0,0)
+#define GREEN RGB(0,255,0)
+#define BLUE RGB(0,0,255)
+#define WHITE RGB(255,255,255)
+#define TRANSPARENCY ARGB(0,0,0,0)
 
 typedef union pixel{
     uint32_t data;
