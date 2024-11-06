@@ -23,9 +23,18 @@ void render_line(struct Shape* self, struct FrameBuffer* fb, int32_t z_index){
     int32_t err = dx - dy;
     int32_t x = start.x;
     int32_t y = start.y;
-    int32_t r = 0;
     while (x != end.x || y != end.y){
-        fb->render_pixel(fb, z_index, VEC2(x, y), line->color); 
+        int32_t radius = line->thickness;
+        for (int32_t i = -radius; i < radius + 1; i++) {
+            for (int32_t j = -radius; j < radius + 1; j++) {
+                if (i*i + j*j < radius*radius){
+                    int32_t new_x = x + i;
+                    int32_t new_y = y + j;
+                    if (new_x >= 0 && new_x < fb->width && new_y >= 0 && new_y < fb->height)
+                        fb->render_pixel(fb, z_index, VEC2(new_x, new_y), line->color); 
+                }
+            }
+        }
         int32_t e2 = err * 2;
         if (e2 > -dy){
             err -= dy;
