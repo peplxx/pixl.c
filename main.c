@@ -1,7 +1,7 @@
 #include "pixl/pixl.h"
 #include "pixl/shapes/shapes.h"
 
-#define DEBUG
+// #define DEBUG
 #include "pixl/utils/debug.h"
 
 int BRUSH = 20;
@@ -53,7 +53,8 @@ void onMouseUp(struct Pixl* self, SDL_Event* event){
 }
 
 void onMouseWheel(struct Pixl* self, SDL_Event* event){
-    dprintf("Brush size is now %d\n", BRUSH += event->wheel.y);
+    BRUSH += event->wheel.y;
+    dprintf("Brush size is now %d\n", BRUSH); 
 }
 int main() {
     Pixl pixl = Pixl_create(1000,1000,"Pixl",RGB(20,20,20));

@@ -1,3 +1,3 @@
 
 
-const int REFRESH_RATE = 10;
+const int REFRESH_RATE = 60;

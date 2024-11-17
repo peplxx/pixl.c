@@ -41,16 +41,14 @@ void fb_render_pixel(struct FrameBuffer* self, int32_t z_index, struct vec2 pos,
     self->layers[z_index]->render_pixel(self->layers[z_index], pos, pixel);
 }
 
-void* get_buffer(struct FrameBuffer* self){
-    for (uint32_t index = 0; index < self->width * self->height; index++)
-        self->buffer[index] = ARGB(0, 0, 0, 0);
-    
+void* get_buffer(struct FrameBuffer* self) {
     for (int32_t x = 0; x < self->width; x++) {
         for (int32_t y = 0; y < self->height; y++) {
+            self->buffer[x * self->width + y] = ARGB(0, 0, 0, 0);
             for (int32_t z = MAX_LAYERS - 1; z >= 0; z--) {
                 Layer* layer = self->layers[z];
                 pixel current_pixel = layer->buffer[x * self->width + y];
-                if (current_pixel.data!= 0) {
+                if (current_pixel.data != 0) {
                     self->buffer[x * self->width + y] = current_pixel;
                     break;
                 }
@@ -58,8 +56,8 @@ void* get_buffer(struct FrameBuffer* self){
         }
     }
     return self->buffer;
-
 }
+
 
 FrameBuffer* FrameBuffer_create(int32_t width, int32_t height, pixel color){
     FrameBuffer* fb = (FrameBuffer*)malloc(sizeof(FrameBuffer));

@@ -44,23 +44,22 @@ void init(struct Pixl*self){
 void display(struct Pixl*self){
     self->is_running = 1;
     SDL_Event event;
-    while (self->is_running ){
-        while (SDL_PollEvent(&event)){
+    uint32_t lastTime = SDL_GetTicks();
+    const uint32_t interval = 1000 / REFRESH_RATE;  // Calculate interval in milliseconds
+    while (self->is_running) {
+        uint32_t currentTime = SDL_GetTicks();
+        while (SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT) self->is_running = 0;
             if (event.type == SDL_MOUSEMOTION) self->mouse = VEC2(event.motion.y, event.motion.x);
-            if (self->onMouseDown != NULL && event.type == SDL_MOUSEBUTTONDOWN)self->onMouseDown(self,&event);
-            if (self->onMouseUp != NULL && event.type == SDL_MOUSEBUTTONUP)self->onMouseUp(self,&event); 
-            if (self->onMouseWheel != NULL && event.type == SDL_MOUSEWHEEL)self->onMouseWheel(self,&event);
-            
-            
-            
-            
-            if (self->onUpdate != NULL) 
-                self->onUpdate(self, &event); // User defined func for changing buffer.
-        
+            if (self->onMouseDown != NULL && event.type == SDL_MOUSEBUTTONDOWN) self->onMouseDown(self, &event);
+            if (self->onMouseUp != NULL && event.type == SDL_MOUSEBUTTONUP) self->onMouseUp(self, &event);
+            if (self->onMouseWheel != NULL && event.type == SDL_MOUSEWHEEL) self->onMouseWheel(self, &event);
+            if (self->onUpdate != NULL) self->onUpdate(self, &event); // User defined func for changing buffer.
         }
-        self->update(self);
-
+        if (currentTime - lastTime >= interval) {
+            self->update(self);
+            lastTime = currentTime;
+        }
     }
     self->destroy(self);
     
