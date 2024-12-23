@@ -1,5 +1,5 @@
 build: 
-	gcc main.c -o main -lSDL2main -lSDL2
+	gcc main.c -o main -lSDL2main -lSDL2 -O3
 
 run:
 	./main

@@ -4,6 +4,7 @@
 #include <SDL2/SDL.h>
 #include "render/framebuffer.h"
 #include "utils/constraints.h"
+#include "shapes/shapes.h"
 
 struct Pixl* canvas = NULL;
 const struct Pixl* get_canvas(){
@@ -54,7 +55,7 @@ void display(struct Pixl*self){
             if (self->onMouseDown != NULL && event.type == SDL_MOUSEBUTTONDOWN) self->onMouseDown(self, &event);
             if (self->onMouseUp != NULL && event.type == SDL_MOUSEBUTTONUP) self->onMouseUp(self, &event);
             if (self->onMouseWheel != NULL && event.type == SDL_MOUSEWHEEL) self->onMouseWheel(self, &event);
-            if (self->onUpdate != NULL) self->onUpdate(self, &event); // User defined func for changing buffer.
+            if (self->onUpdate != NULL) self->onUpdate(self, &event);
         }
         if (currentTime - lastTime >= interval) {
             self->update(self);
