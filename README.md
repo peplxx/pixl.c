@@ -1,6 +1,9 @@
 # Pixl - A Low-Level Pixel Graphics Library
 
 Pixl is a minimalist graphics library built on SDL2, focusing exclusively on pixel-level rendering operations. Unlike higher-level graphics libraries, Pixl provides direct pixel manipulation capabilities while abstracting away SDL2's complexity.
+## Examples
+[circle-drawer.webm](https://github.com/user-attachments/assets/44511e26-c05c-482a-a99f-40567ed55b66)
+> Just simple mouse event tracking + using layered render to display ui and drawings separately.
 
 ## Core Concept
 
@@ -21,10 +24,4 @@ The library's fundamental approach is to work directly with pixels, providing:
 ## Dependencies
 
 - SDL2 (only used for window management and final buffer presentation)
-
-## Example Usage
-
-The library handles all rendering through pixel operations. For instance, a line is drawn by calculating and setting individual pixels rather than using SDL's line drawing functions.
-
-
 
